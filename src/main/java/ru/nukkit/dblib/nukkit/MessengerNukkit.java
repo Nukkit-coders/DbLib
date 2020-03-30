@@ -1,6 +1,6 @@
 package ru.nukkit.dblib.nukkit;
 
-import cn.nukkit.Player;
+import cn.nukkit.player.Player;
 import cn.nukkit.Server;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.level.Location;
