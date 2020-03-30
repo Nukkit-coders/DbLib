@@ -1,4 +1,4 @@
-# DbLib
+# DbLib Nukkit2.0
 DbLib a library for Nukkit and Voxelwind, that include ORMLite, Sql2o and jdbc-connectors (MySQL and SQLite).
 
 [**Release (outdated, use dev builds)**](http://nukkit.ru/resources/dblib.14/)
