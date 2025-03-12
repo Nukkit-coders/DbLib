@@ -1,11 +1,9 @@
 # DbLib
-DbLib a library for Nukkit and Voxelwind, that include ORMLite, Sql2o and jdbc-connectors (MySQL and SQLite).
+DbLib a library for Nukkit that include ORMLite, Sql2o and jdbc-connectors (MySQL and SQLite).
 
-[**Release (outdated, use dev builds)**](http://nukkit.ru/resources/dblib.14/)
+[**Download**](https://cloudburstmc.org/resources/dblib.12/)
 
-[**Latest Dev Build**  ![CircleCI](https://circleci.com/gh/fromgate/DbLib.svg?style=shield)](https://circleci.com/gh/fromgate/DbLib)
-
-Example project: [DbExample](https://github.com/fromgate/DbExample)
+[Example Project](https://github.com/fromgate/DbExample)
 
 
 ## Features
@@ -76,7 +74,7 @@ Here is example of creating new table:
 ```
   public boolean connectToDbLib(){
     if (this.getServer().getPluginManager().getPlugin("DbLib") == null){
-      this.getLogger().info(TextFormat.RED+"DbLib plugin not found");
+      this.getLogger().info("DbLib plugin not found");
       return false;
     }
     connectionSource = DbLib.getConnectionSource();

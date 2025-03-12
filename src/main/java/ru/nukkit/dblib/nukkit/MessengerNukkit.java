@@ -12,10 +12,7 @@ import ru.nukkit.dblib.core.Messenger;
 import java.io.File;
 import java.io.InputStream;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static ru.nukkit.dblib.core.M.LNG_SAVE_FAIL;
 import static ru.nukkit.dblib.core.M.debugException;
@@ -92,7 +89,7 @@ public class MessengerNukkit implements Messenger {
 
     @Override
     public boolean broadcast(String permission, String text) {
-        List<Player> playerList = new ArrayList<Player>();
+        List<Player> playerList = new ArrayList<>();
         for (Player player : Server.getInstance().getOnlinePlayers().values()) {
             if (permission == null || permission.isEmpty() || player.hasPermission(permission)) {
                 player.sendMessage(text);
@@ -116,11 +113,10 @@ public class MessengerNukkit implements Messenger {
         return s;
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public Map<String, String> load(String language) {
         File f = new File(plugin.getDataFolder() + File.separator + language + ".lng");
-        Config lng = null;
+        Config lng;
         if (!f.exists()) {
             lng = new Config(f, Config.YAML);
             InputStream is = plugin.getClass().getResourceAsStream("/lang/" + language + ".lng");
@@ -131,7 +127,7 @@ public class MessengerNukkit implements Messenger {
             }
         } else lng = new Config(f, Config.YAML);
 
-        Map<String, String> msg = new HashMap<String, String>();
+        Map<String, String> msg = new HashMap<>();
         for (String key : lng.getKeys(true)) {
             if (lng.isSection(key)) continue;
             msg.put(key, lng.getString(key));
@@ -144,7 +140,7 @@ public class MessengerNukkit implements Messenger {
         File f = new File(plugin.getDataFolder() + File.separator + language + ".lng");
         Config lng = new Config(f, Config.YAML);
         for (String key : messages.keySet())
-            lng.set(key.toLowerCase(), messages.get(key));
+            lng.set(key.toLowerCase(Locale.ROOT), messages.get(key));
         try {
             lng.save();
         } catch (Exception e) {

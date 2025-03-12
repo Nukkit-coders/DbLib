@@ -18,10 +18,8 @@ public enum M {
 
     private static boolean debugMode = false;
     private static String language = "default";
-    private static boolean saveLanguage = false;
-    private static char c1 = 'a';
-    private static char c2 = '2';
-    private static String pluginName;
+    private static final char c1 = 'a';
+    private static final char c2 = '2';
 
 
     public static String colorize(String text) {
@@ -39,7 +37,7 @@ public enum M {
     public static void BC(Object... s) {
         if (!debugMode) return;
         if (s.length == 0) return;
-        StringBuilder sb = new StringBuilder("&3[").append(pluginName).append("]&f ");
+        StringBuilder sb = new StringBuilder("&3[DbLib]&f ");
         for (Object str : s)
             sb.append(str.toString()).append(" ");
 
@@ -172,10 +170,10 @@ public enum M {
         int count = 1;
         int c = 0;
         DecimalFormat fmt = new DecimalFormat("####0.##");
-        for (int i = 0; i < keys.length; i++) {
-            String s = messenger.toString(keys[i], fullFloat);//keys[i].toString();
-            if (c < 2 && keys[i] instanceof Character) {
-                colors[c] = (Character) keys[i];
+        for (Object key : keys) {
+            String s = messenger.toString(key, fullFloat);//keys[i].toString();
+            if (c < 2 && key instanceof Character) {
+                colors[c] = (Character) key;
                 c++;
                 continue;
             } else if (s.startsWith("prefix:")) {
@@ -190,12 +188,12 @@ public enum M {
             } else if (s.equals("FULLFLOAT")) {
                 fullFloat = true;
                 continue;
-            } else if (keys[i] instanceof Double || keys[i] instanceof Float) {
-                if (!fullFloat) s = fmt.format((Double) keys[i]);
+            } else if (key instanceof Double || key instanceof Float) {
+                if (!fullFloat) s = fmt.format((Double) key);
             }
 
-            String from = (new StringBuilder("%").append(count).append("%")).toString();
-            String to = skipDefaultColors ? s : (new StringBuilder("&").append(colors[1]).append(s).append("&").append(colors[0])).toString();
+            String from = "%" + count + "%";
+            String to = skipDefaultColors ? s : "&" + colors[1] + s + "&" + colors[0];
             str = str.replace(from, to);
             count++;
         }
@@ -213,8 +211,8 @@ public enum M {
     }
 
     private String message;
-    private Character color1;
-    private Character color2;
+    private final Character color1;
+    private final Character color2;
 
     M(String msg) {
         message = msg;
@@ -245,9 +243,8 @@ public enum M {
         messenger = mess;
         language = lang.equalsIgnoreCase("default") ? "eng" : lang;
         debugMode = debug;
-        saveLanguage = save;
         initMessages();
-        if (saveLanguage) saveMessages();
+        if (save) saveMessages();
         LNG_CONFIG.debug(M.values().length, language, true, debugMode);
     }
 
@@ -268,16 +265,17 @@ public enum M {
     private static void initMessages() {
         Map<String, String> lng = messenger.load(language);
         for (M key : M.values()) {
-            if (lng.containsKey(key.name().toLowerCase())) {
-                key.initMessage(lng.get(key.name().toLowerCase()));
+            String keyLow = key.name().toLowerCase(Locale.ROOT);
+            if (lng.containsKey(keyLow)) {
+                key.initMessage(lng.get(keyLow));
             }
         }
     }
 
     private static void saveMessages() {
-        Map<String, String> messages = new LinkedHashMap<String, String>();
+        Map<String, String> messages = new LinkedHashMap<>();
         for (M msg : M.values()) {
-            messages.put(msg.name().toLowerCase(), msg.message);
+            messages.put(msg.name().toLowerCase(Locale.ROOT), msg.message);
         }
         messenger.save(language, messages);
     }
@@ -325,7 +323,7 @@ public enum M {
 
     public static void printPage(Object sender, List<String> lines, M title, M footer, int pageNum, int linesPerPage) {
         if (lines == null || lines.isEmpty()) return;
-        List<String> page = new ArrayList<String>();
+        List<String> page = new ArrayList<>();
         if (title != null) page.add(title.message);
 
         int pageCount = lines.size() / linesPerPage + 1;
